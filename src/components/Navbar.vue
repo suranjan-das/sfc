@@ -1,0 +1,48 @@
+<template>
+  <div>
+    <!-- <b-navbar toggleable="lg" variant="info" type="dark">
+      <b-navbar-brand href="#">NavBar</b-navbar-brand>
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+      <b-collapse id="nav-collapse" is-nav>
+        <b-navbar-nav>
+          <b-nav-item href="#">Link</b-nav-item>
+          <b-nav-item href="#">Disabled</b-nav-item>
+          <b-nav-item @click=logout>Logout</b-nav-item>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar> -->
+    <b-navbar type="dark" variant="dark">
+    <b-navbar-nav>
+      <b-nav-item href="#">Home</b-nav-item>
+
+      <!-- Navbar dropdowns -->
+      <b-nav-item-dropdown text="Lang" right>
+        <b-dropdown-item href="#">EN</b-dropdown-item>
+        <b-dropdown-item href="#">ES</b-dropdown-item>
+        <b-dropdown-item href="#">RU</b-dropdown-item>
+        <b-dropdown-item href="#">FA</b-dropdown-item>
+      </b-nav-item-dropdown>
+
+      <b-nav-item-dropdown text="User" right>
+        <b-dropdown-item href="#">Account</b-dropdown-item>
+        <b-dropdown-item href="#">Settings</b-dropdown-item>
+      </b-nav-item-dropdown>
+      <b-nav-item @click=logout>Logout</b-nav-item>
+    </b-navbar-nav>
+  </b-navbar>
+  </div>
+</template>
+
+<script>
+import { mapActions } from "vuex";
+
+export default {
+  name: "Navbar",
+  props: {
+    msg: String,
+  },
+  methods: {
+    ...mapActions(["logout"]),
+  },
+};
+</script>
