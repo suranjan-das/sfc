@@ -13,7 +13,7 @@
     </b-navbar> -->
     <b-navbar type="dark" variant="dark">
     <b-navbar-nav>
-      <b-nav-item href="#">Home</b-nav-item>
+      <b-nav-item @click="toDashboard" href="#">Dashboard</b-nav-item>
 
       <!-- Navbar dropdowns -->
       <b-nav-item-dropdown text="Lang" right>
@@ -35,6 +35,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import router from "../router/router";
 
 export default {
   name: "Navbar",
@@ -43,6 +44,9 @@ export default {
   },
   methods: {
     ...mapActions(["logout"]),
+    toDashboard() {
+      router.push("/dashboard")
+    }
   },
 };
 </script>

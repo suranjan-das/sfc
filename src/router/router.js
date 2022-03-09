@@ -15,11 +15,6 @@ const routes = [
     component: Login
   },
   {
-    path: '/home',
-    name: 'Home',
-    component: Home
-  },
-  {
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard
@@ -54,7 +49,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   store.dispatch('fetchAccessToken');
-  if (to.fullPath === '/home') {
+  if (to.fullPath === '/dashboard') {
     if (!store.state.accessToken) {
       next('/login');
     }
@@ -66,7 +61,7 @@ router.beforeEach((to, from, next) => {
   }
   if (to.fullPath === '/login') {
     if (store.state.accessToken) {
-      next('/home');
+      next('/dashboard');
     }
   }
   next();

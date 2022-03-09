@@ -8,13 +8,26 @@
         <h4 v-if="!front_face" class="card-back">{{ card_back }}</h4>
       </div>
       <div class="card-bottom">
-        <b-button @click="showAnswer()" v-if="front_face" variant="primary"
+        <b-button
+          @click="showAnswer()"
+          v-if="front_face"
+          variant="primary"
+          :disabled="cards_exhausted"
           >Show Answer</b-button
         >
         <div v-if="!front_face">
-          <b-button class="mx-1" @click="nextCard()">Easy</b-button>
-          <b-button class="mx-1" variant="success">Comfortable</b-button>
-          <b-button class="mx-1" variant="outline-primary">Hard</b-button>
+          <b-button
+            class="mx-1"
+            @click="setScore(1)"
+            variant="outline-secondary"
+            >Easy</b-button
+          >
+          <b-button class="mx-1" @click="setScore(2)" variant="outline-success"
+            >Comfortable</b-button
+          >
+          <b-button class="mx-1" @click="setScore(3)" variant="outline-primary"
+            >Hard</b-button
+          >
         </div>
       </div>
     </div>
@@ -51,12 +64,35 @@ export default {
       card_back: null,
       card_score: 0,
       front_face: true,
-      card_pos: 0
+      card_pos: 0,
+      cards_exhausted: false,
     };
   },
   props: ["id"],
   components: {
     Navbar,
+  },
+  methods: {
+    showAnswer: function () {
+      this.front_face = !this.front_face;
+    },
+    nextCard: function () {
+      if (this.card_pos < this.cards.length) {
+        this.card_front = this.cards[this.card_pos].front;
+        this.card_back = this.cards[this.card_pos].back;
+        //this.card_pos += 1
+      } else {
+        // all card has been read
+        this.card_front = "No more cards to show";
+        this.cards_exhausted = true;
+      }
+      this.showAnswer();
+    },
+    setScore: function (difficultyLevel) {
+      this.cards[this.card_pos].score = difficultyLevel;
+      this.card_pos += 1;
+      this.nextCard();
+    },
   },
   created() {
     fetch(store.state.base_url + `api/card/${this.id}`, {
@@ -67,20 +103,18 @@ export default {
       .then((response) => response.json())
       .then((data) => {
         this.cards = data;
+        if (this.cards.length) {
+          this.card_front = this.cards[0].front;
+          this.card_back = this.cards[0].back;
+        } else {
+          // No card available, start adding cards
+          this.card_front = "No cards to show, lets add one";
+          this.cards_exhausted = true;
+        }
       });
   },
-  methods: {
-    showAnswer: function() {
-      this.front_face = !this.front_face;
-    },
-    nextCard: function() {
-      if(this.card_pos < this.cards.length) {
-        this.card_front = this.cards[this.card_pos].front
-        this.card_back = this.cards[this.card_pos].back
-        this.card_pos += 1
-      }
-      this.showAnswer();
-    }
+  beforeDestroy() {
+    console.log("post and update card data");
   },
 };
 </script>
