@@ -41,12 +41,20 @@
       >+</b-button
     >
     <!-- The modal -->
-    <b-modal id="my-modal" hide-header-close>
+    <b-modal id="my-modal" hide-header-close @ok="addNewCard">
       <template #modal-title> Add new card </template>
       <b-form>
-        <b-form-input type="text" placeholder="Card front" />
+        <b-form-input
+          v-model="newCard.front"
+          type="text"
+          placeholder="Card front"
+        />
         <br />
-        <b-form-textarea type="text" placeholder="Card back" />
+        <b-form-textarea
+          v-model="newCard.back"
+          type="text"
+          placeholder="Card back"
+        />
       </b-form>
     </b-modal>
   </div>
@@ -66,6 +74,10 @@ export default {
       front_face: true,
       card_pos: 0,
       cards_exhausted: false,
+      newCard: {
+        front: "",
+        back: "",
+      },
     };
   },
   props: ["id"],
@@ -93,10 +105,46 @@ export default {
       this.card_pos += 1;
       this.nextCard();
     },
+    addNewCard() {
+      fetch(store.state.base_url + `api/card/${this.id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authentication_token: store.state.accessToken,
+        },
+        body: JSON.stringify({
+          front: this.newCard.front,
+          back: this.newCard.back
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => console.error(error));
+      // clear add new card fields
+      this.newCard.front = "";
+      this.newCard.back = "";
+    },
+    updateCard() {
+      // update the cards data while leaving
+      fetch(store.state.base_url + `api/card/${this.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          authentication_token: store.state.accessToken,
+        },
+        body: JSON.stringify(this.cards),
+      })
+        .then((response) => response.json())
+        .then((data) => {})
+        .catch((error) => console.error(error));
+    },
   },
   created() {
     fetch(store.state.base_url + `api/card/${this.id}`, {
       headers: {
+        "Content-Type": "application/json",
         authentication_token: store.state.accessToken,
       },
     })
@@ -114,7 +162,7 @@ export default {
       });
   },
   beforeDestroy() {
-    console.log("post and update card data");
+    this.updateCard();
   },
 };
 </script>
