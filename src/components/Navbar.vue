@@ -27,6 +27,7 @@
         <b-dropdown-item href="#">Account</b-dropdown-item>
         <b-dropdown-item href="#">Settings</b-dropdown-item>
       </b-nav-item-dropdown>
+      <b-nav-item v-b-modal.my-modal>Add</b-nav-item>
       <b-nav-item @click=logout>Logout</b-nav-item>
     </b-navbar-nav>
   </b-navbar>

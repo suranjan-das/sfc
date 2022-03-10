@@ -9,7 +9,7 @@
       </div>
       <div class="card-bottom">
         <b-button
-          @click="showAnswer()"
+          @click="showAnswer"
           v-if="front_face"
           variant="primary"
           :disabled="cards_exhausted"
@@ -31,15 +31,6 @@
         </div>
       </div>
     </div>
-    <b-button
-      id="add-btn"
-      variant="primary"
-      class="position-absolute bottom-0 end-0"
-      size="lg"
-      pill
-      v-b-modal.my-modal
-      >+</b-button
-    >
     <!-- The modal -->
     <b-modal id="my-modal" hide-header-close @ok="addNewCard">
       <template #modal-title> Add new card </template>
@@ -62,6 +53,7 @@
 
 <script>
 import Navbar from "@/components/Navbar.vue";
+import router from "../router/router";
 import store from "../store/store";
 
 export default {
@@ -114,12 +106,12 @@ export default {
         },
         body: JSON.stringify({
           front: this.newCard.front,
-          back: this.newCard.back
+          back: this.newCard.back,
         }),
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
+          this.makeToast('success')
         })
         .catch((error) => console.error(error));
       // clear add new card fields
@@ -139,6 +131,13 @@ export default {
         .then((response) => response.json())
         .then((data) => {})
         .catch((error) => console.error(error));
+    },
+    makeToast(variant = null) {
+      this.$bvToast.toast("Toast body content", {
+        title: `Variant ${variant || "default"}`,
+        variant: variant,
+        solid: true,
+      });
     },
   },
   created() {

@@ -3,7 +3,7 @@
     <Navbar />
     <b-table hover :items="items" :fields="fields">
       <template v-slot:cell(deck_name)="data">
-        <b-link style="text-decoration: none" href="" @click="goToCards(data.item.d_id)">{{data.item.deck_name}}</b-link>
+        <b-link href="" @click="goToCards(data.item.d_id)">{{data.item.deck_name}}</b-link>
       </template>
       <template v-slot:cell(export)="data">
         <b-link @click="goToCards(data.item.d_id)"
@@ -23,15 +23,6 @@
         ></b-link>
       </template>
     </b-table>
-    <b-button
-      id="add-btn"
-      variant="primary"
-      class="position-absolute bottom-0 end-0"
-      size="lg"
-      pill
-      v-b-modal.my-modal
-      >+</b-button
-    >
     <!-- The modal -->
     <b-modal
       id="my-modal"
@@ -180,9 +171,4 @@ export default {
 </script>
 
 <style scoped>
-#add-btn {
-  margin: 30px;
-  font-size: 20px;
-  font-weight: bold;
-}
 </style>

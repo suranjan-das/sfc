@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import PortalVue from 'portal-vue'
 import App from './App.vue'
 import router from './router/router'
 import store from './store/store'
@@ -11,6 +12,7 @@ Vue.config.productionTip = false
 
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
+Vue.use(PortalVue)
 
 new Vue({
   router,
