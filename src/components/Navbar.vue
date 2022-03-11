@@ -1,16 +1,5 @@
 <template>
   <div>
-    <!-- <b-navbar toggleable="lg" variant="info" type="dark">
-      <b-navbar-brand href="#">NavBar</b-navbar-brand>
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-      <b-collapse id="nav-collapse" is-nav>
-        <b-navbar-nav>
-          <b-nav-item href="#">Link</b-nav-item>
-          <b-nav-item href="#">Disabled</b-nav-item>
-          <b-nav-item @click=logout>Logout</b-nav-item>
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar> -->
     <b-navbar type="dark" variant="dark">
     <b-navbar-nav>
       <b-nav-item @click="toDashboard" href="#">Dashboard</b-nav-item>
@@ -28,6 +17,8 @@
         <b-dropdown-item href="#">Settings</b-dropdown-item>
       </b-nav-item-dropdown>
       <b-nav-item v-b-modal.my-modal>Add</b-nav-item>
+      <b-nav-item >Export</b-nav-item>
+      <b-nav-item >Import</b-nav-item>
       <b-nav-item @click=logout>Logout</b-nav-item>
     </b-navbar-nav>
   </b-navbar>

@@ -2,25 +2,36 @@
   <div>
     <Navbar />
     <b-table hover :items="items" :fields="fields">
-      <template v-slot:cell(deck_name)="data">
-        <b-link href="" @click="goToCards(data.item.d_id)">{{data.item.deck_name}}</b-link>
+      <template #cell(select_row)="data">
+        <b-form-group>
+          <b-checkbox  
+          @input="onCheckboxSelect($event, data.index, data.item)"/>
+        </b-form-group>
       </template>
-      <template v-slot:cell(export)="data">
-        <b-link @click="goToCards(data.item.d_id)"
-          ><b-icon scale="1.5" icon="file-earmark-arrow-up"></b-icon
-        ></b-link>
+      <template #cell(deck_name)="data">
+        <b-link href="" @click="goToCards(data.item.d_id)">{{
+          data.item.deck_name
+        }}</b-link>
       </template>
-      <template v-slot:cell(Edit)="data">
-        <b-link
-          @click="editDeck(data.item.d_id)"
-          ><b-icon scale="1.5" variant="success" icon="pencil-square"></b-icon
-        ></b-link>
-        </template>
-        <template v-slot:cell(Delete)="data">
-        <b-link
-          @click="deleteDeck(data.item.d_id)"
-          ><b-icon scale="1.5" variant="danger" icon="trash"></b-icon
-        ></b-link>
+      <template #cell(action)="data">
+        <div>
+          <b-dropdown
+            id="dropdown-1"
+            right
+            text="action"
+            size="sm"
+            variant="outline-primary"
+            class="m-md-2"
+          >
+            <b-dropdown-item>Edit</b-dropdown-item>
+            <b-dropdown-item @click="deleteDeck(data.item.d_id)"
+              >Delete</b-dropdown-item
+            >
+            <b-dropdown-item>Visit</b-dropdown-item>
+            <b-dropdown-divider></b-dropdown-divider>
+            <b-dropdown-item>Export</b-dropdown-item>
+          </b-dropdown>
+        </div>
       </template>
     </b-table>
     <!-- The modal -->
@@ -50,11 +61,6 @@ import router from "../router/router";
 // @ is an alias to /src
 import Navbar from "@/components/Navbar.vue";
 
-if (window.screen.width < 800) {
-  // do stuff
-  console.log("adjust table");
-}
-
 export default {
   mounted() {
     this.getDecks();
@@ -68,6 +74,11 @@ export default {
       },
       // Note 'isActive' is left out and will not appear in the rendered table
       fields: [
+        {
+          key: "select_row",
+          label: "",
+          class: "text-center",
+        },
         {
           key: "deck_name",
           label: "Name",
@@ -83,30 +94,34 @@ export default {
           key: "time_created",
           label: "Reviewed on",
           class: "text-center",
+          formatter: (value, key, item) => {
+            return value.substring(0, 16);
+          },
+        },
+        {
+          key: "action",
+          label: "Action",
+          class: "text-center",
         },
         {
           key: "score",
           label: "Score",
           class: "text-center",
         },
-        {
-          key: "export",
-          label: "Export",
-          class: "text-center",
-        },
-        {
-          key: "Edit",
-          label: "",
-        },
-        {
-          key: "Delete",
-          label: "",
-        },
       ],
       items: [],
+      selectedRows: []
     };
   },
   methods: {
+    onCheckboxSelect(value, index, row) {
+      if (value) {
+        this.selectedRows.push(row)
+      } else {
+        let index = this.selectedRows.indexOf(row)
+        this.selectedRows.splice(index, 1)
+      }
+    },
     editDeck: function (d) {
       console.log("edit deck with id:", d);
     },
