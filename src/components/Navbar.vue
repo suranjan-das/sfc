@@ -19,7 +19,7 @@
       <b-nav-item v-b-modal.my-modal>Add</b-nav-item>
       <b-nav-item >Export</b-nav-item>
       <b-nav-item >Import</b-nav-item>
-      <b-nav-item @click=logout>Logout</b-nav-item>
+      <b-nav-item @click="logout" right>Logout</b-nav-item>
     </b-navbar-nav>
   </b-navbar>
   </div>
