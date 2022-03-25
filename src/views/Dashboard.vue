@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Navbar />
+    <Navbar :showExport="true" @export="exportTo" />
     <b-table hover :items="items" :fields="fields" class="text-center">
       <template #cell(select_row)="data">
         <b-form-group>
@@ -28,9 +28,11 @@
             <b-dropdown-item @click="deleteDeck(data.item.d_id)"
               >Delete</b-dropdown-item
             >
-            <b-dropdown-item>Visit</b-dropdown-item>
-            <b-dropdown-divider></b-dropdown-divider>
-            <b-dropdown-item>Export</b-dropdown-item>
+            <b-dropdown-item @click="goToCards(data.item.d_id)"
+              >Visit</b-dropdown-item
+            >
+            <!-- <b-dropdown-divider></b-dropdown-divider>
+            <b-dropdown-item @click="exportTo">Export</b-dropdown-item> -->
           </b-dropdown>
         </div>
       </template>
@@ -85,6 +87,15 @@
         />
       </b-form>
     </b-modal>
+    <!-- The export deck modal -->
+    <b-modal id="export-modal" hide-header-close @ok="exportDecks">
+      <b-form-file
+        v-model="file1"
+        :state="Boolean(file1)"
+        placeholder="Choose a file or drop it here..."
+        drop-placeholder="Drop file here..."
+      ></b-form-file>
+    </b-modal>
   </div>
 </template>
 
@@ -101,6 +112,7 @@ export default {
   data() {
     return {
       nameState: null,
+      file1: null,
       deck: {
         id: null,
         name: "",
@@ -156,8 +168,8 @@ export default {
       }
       this.addNewDeck();
       this.$nextTick(() => {
-          this.$bvModal.hide('my-modal')
-        })
+        this.$bvModal.hide("my-modal");
+      });
     },
     onCheckboxSelect(value, index, row) {
       if (value) {
@@ -183,7 +195,6 @@ export default {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           this.getDecks();
         });
     },
@@ -246,6 +257,38 @@ export default {
         .then((data) => {
           this.items = data;
         });
+    },
+    exportTo: function () {
+      if (!this.selectedRows.length) {
+        this.makeToast("danger", "select atleast one deck");
+      } else {
+        this.$bvModal.show("export-modal");
+      }
+    },
+    exportDecks: function () {
+      console.log(this.file1);
+      fetch(store.state.base_url + "/export", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authentication_token: store.state.accessToken,
+        },
+        body: JSON.stringify(this.selectedRows),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    makeToast(variant = null, message) {
+      this.$bvToast.toast(message, {
+        title: `${variant || "default"}`,
+        variant: variant,
+        solid: true,
+      });
     },
   },
   components: {

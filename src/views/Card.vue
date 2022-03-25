@@ -1,10 +1,10 @@
 <template>
   <div>
-    <Navbar />
+    <Navbar :showExport="false"/>
     <div class="card-box text-center">
       <div class="card-top">
         <b-nav pills>
-          <b-nav-item active>Active</b-nav-item>
+          <b-nav-item>Active</b-nav-item>
           <b-nav-item>Link</b-nav-item>
           <b-nav-item-dropdown
             id="my-nav-dropdown"
@@ -12,15 +12,15 @@
             toggle-class="nav-link-custom"
             right
           >
-            <b-dropdown-item>One</b-dropdown-item>
-            <b-dropdown-item>Two</b-dropdown-item>
-            <b-dropdown-divider></b-dropdown-divider>
-            <b-dropdown-item>Three</b-dropdown-item>
+            <b-dropdown-item :disabled="cards_exhausted" @click="editCard">Edit</b-dropdown-item>
+            <b-dropdown-item :disabled="cards_exhausted" @click="deleteCard">Delete</b-dropdown-item>
+            <!-- <b-dropdown-divider></b-dropdown-divider>
+            <b-dropdown-item>Three</b-dropdown-item> -->
           </b-nav-item-dropdown>
         </b-nav>
       </div>
       <div>
-        <hr>
+        <hr />
       </div>
       <div class="card-middle">
         <h3 class="card-front">{{ card_front }}</h3>
@@ -50,7 +50,7 @@
         </div>
       </div>
     </div>
-    <!-- The modal -->
+    <!-- The add card modal -->
     <b-modal id="my-modal" hide-header-close @ok="addNewCard">
       <template #modal-title> Add new card </template>
       <b-form>
@@ -62,6 +62,27 @@
         <br />
         <b-form-textarea
           v-model="newCard.back"
+          type="text"
+          placeholder="Card back"
+        />
+      </b-form>
+    </b-modal>
+    <!-- The edit card modal -->
+    <b-modal
+      id="edit-card-modal"
+      hide-header-close
+      @ok="updateCardData"
+    >
+      <template #modal-title> Update card </template>
+      <b-form>
+        <b-form-input
+          v-model="card_front"
+          type="text"
+          placeholder="Card front"
+        />
+        <br />
+        <b-form-textarea
+          v-model="card_back"
           type="text"
           placeholder="Card back"
         />
@@ -109,12 +130,12 @@ export default {
         this.card_front = "No more cards to show";
         this.cards_exhausted = true;
       }
-      this.showAnswer();
     },
     setScore: function (difficultyLevel) {
       this.cards[this.card_pos].score = difficultyLevel;
       this.card_pos += 1;
       this.nextCard();
+      this.showAnswer();
     },
     addNewCard() {
       fetch(store.state.base_url + `api/card/${this.id}`, {
@@ -130,7 +151,7 @@ export default {
       })
         .then((response) => response.json())
         .then((data) => {
-          this.makeToast("success");
+          this.makeToast("success", "card added in the deck");
         })
         .catch((error) => console.error(error));
       // clear add new card fields
@@ -151,9 +172,37 @@ export default {
         .then((data) => {})
         .catch((error) => console.error(error));
     },
-    makeToast(variant = null) {
-      this.$bvToast.toast("Toast body content", {
-        title: `Variant ${variant || "default"}`,
+    deleteCard: function () {
+      let card_id = this.cards[this.card_pos].c_id;
+      fetch(store.state.base_url + `api/card/${card_id}`, {
+        method: "DELETE",
+        headers: {
+          authentication_token: store.state.accessToken,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.makeToast("success", "card deleted from deck");
+        })
+        .catch((error) => console.error(error));
+      this.cards.splice(this.card_pos, 1);
+      if (this.front_face) {
+        this.nextCard();
+      } else {
+        this.nextCard();
+        this.showAnswer();
+      }
+    },
+    editCard: function () {
+      this.$bvModal.show("edit-card-modal");
+    },
+    updateCardData: function () {
+      this.cards[this.card_pos].front = this.card_front;
+      this.cards[this.card_pos].back = this.card_back;
+    },
+    makeToast(variant = null, message) {
+      this.$bvToast.toast(message, {
+        title: `${variant || "default"}`,
         variant: variant,
         solid: true,
       });

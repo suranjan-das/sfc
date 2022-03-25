@@ -1,27 +1,21 @@
 <template>
   <div>
     <b-navbar type="dark" variant="dark">
-    <b-navbar-nav>
-      <b-nav-item @click="toDashboard" href="#">Dashboard</b-nav-item>
+      <b-navbar-nav>
+        <b-nav-item @click="toDashboard" href="#">Dashboard</b-nav-item>
 
-      <!-- Navbar dropdowns -->
-      <b-nav-item-dropdown text="Lang" right>
-        <b-dropdown-item href="#">EN</b-dropdown-item>
-        <b-dropdown-item href="#">ES</b-dropdown-item>
-        <b-dropdown-item href="#">RU</b-dropdown-item>
-        <b-dropdown-item href="#">FA</b-dropdown-item>
-      </b-nav-item-dropdown>
-
-      <b-nav-item-dropdown text="User" right>
-        <b-dropdown-item href="#">Account</b-dropdown-item>
-        <b-dropdown-item href="#">Settings</b-dropdown-item>
-      </b-nav-item-dropdown>
-      <b-nav-item v-b-modal.my-modal>Add</b-nav-item>
-      <b-nav-item >Export</b-nav-item>
-      <b-nav-item >Import</b-nav-item>
-      <b-nav-item @click="logout" right>Logout</b-nav-item>
-    </b-navbar-nav>
-  </b-navbar>
+        <b-nav-item-dropdown text="User" right>
+          <b-dropdown-item href="#">Account</b-dropdown-item>
+          <b-dropdown-item href="#" @click="toSettings">Settings</b-dropdown-item>
+        </b-nav-item-dropdown>
+        <b-nav-item v-b-modal.my-modal>Add</b-nav-item>
+        
+        <b-nav-item v-if="showExport" @click="doExport">Export</b-nav-item>
+        
+        <b-nav-item>Import</b-nav-item>
+        <b-nav-item @click="logout">Logout</b-nav-item>
+      </b-navbar-nav>
+    </b-navbar>
   </div>
 </template>
 
@@ -32,13 +26,19 @@ import router from "../router/router";
 export default {
   name: "Navbar",
   props: {
-    msg: String,
+    showExport: Boolean,
   },
   methods: {
     ...mapActions(["logout"]),
     toDashboard() {
-      router.push("/dashboard")
+      router.push("/dashboard");
+    },
+    doExport:function() {
+      this.$emit('export')
+    },
+    toSettings: function() {
+      router.push("/settings")
     }
-  },
+  }
 };
 </script>
