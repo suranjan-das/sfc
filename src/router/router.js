@@ -2,10 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '../store/store'
 import Login from '../views/Login.vue'
-import Home from '../views/Home.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Card from '../views/Card.vue'
-import Settings from '../views/Settings.vue'
 
 Vue.use(VueRouter)
 
@@ -25,11 +23,6 @@ const routes = [
     name: 'Card',
     components: {default: Card},
     props: {default: true}
-  },
-  {
-    path: '/settings',
-    name: 'Settings',
-    component: Settings
   },
   {
     path: '/register',

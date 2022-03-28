@@ -92,6 +92,7 @@
       <b-form-file
         v-model="file1"
         :state="Boolean(file1)"
+        @submit="exportDecks"
         placeholder="Choose a file or drop it here..."
         drop-placeholder="Drop file here..."
       ></b-form-file>
@@ -197,6 +198,7 @@ export default {
         .then((data) => {
           this.getDecks();
         });
+        this.makeToast('info', 'Deck deleted successfully')
     },
     updateDeck: function () {
       fetch(store.state.base_url + `api/deck/${this.deck.id}`, {
@@ -285,7 +287,6 @@ export default {
     },
     makeToast(variant = null, message) {
       this.$bvToast.toast(message, {
-        title: `${variant || "default"}`,
         variant: variant,
         solid: true,
       });

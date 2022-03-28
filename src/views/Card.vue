@@ -8,7 +8,7 @@
           <b-nav-item>Link</b-nav-item> -->
           <b-nav-item-dropdown
             id="my-nav-dropdown"
-            text="Dropdown"
+            text="Options"
             toggle-class="nav-link-custom"
             right
           >
@@ -37,14 +37,14 @@
         <div v-if="!front_face">
           <b-button
             class="mx-1"
-            @click="setScore(1)"
+            @click="setScore(5)"
             variant="outline-secondary"
             >Easy</b-button
           >
           <b-button class="mx-1" @click="setScore(2)" variant="outline-success"
             >Comfortable</b-button
           >
-          <b-button class="mx-1" @click="setScore(3)" variant="outline-primary"
+          <b-button class="mx-1" @click="setScore(1)" variant="outline-primary"
             >Hard</b-button
           >
         </div>

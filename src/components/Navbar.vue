@@ -4,15 +4,15 @@
       <b-navbar-nav>
         <b-nav-item @click="toDashboard" href="#">Dashboard</b-nav-item>
 
-        <b-nav-item-dropdown text="User" right>
+        <!-- <b-nav-item-dropdown text="User" right>
           <b-dropdown-item href="#">Account</b-dropdown-item>
           <b-dropdown-item href="#" @click="toSettings">Settings</b-dropdown-item>
-        </b-nav-item-dropdown>
+        </b-nav-item-dropdown> -->
         <b-nav-item v-b-modal.my-modal>Add</b-nav-item>
         
         <b-nav-item v-if="showExport" @click="doExport">Export</b-nav-item>
         
-        <b-nav-item>Import</b-nav-item>
+        <!-- <b-nav-item>Import</b-nav-item> -->
         <b-nav-item @click="logout">Logout</b-nav-item>
       </b-navbar-nav>
     </b-navbar>
