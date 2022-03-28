@@ -1,22 +1,48 @@
 <template>
-  <div class="about">
-    <router-link v-if="!isLoggedIn" to="/login">Login</router-link>
-    <h3>New user registration</h3>
-    <form @submit.prevent="register">
-      <input v-model="user_name" type="text" placeholder="name" />
-      <br />
-      <br />
-      <input v-model="user_email" type="email" placeholder="email" />
-      <br />
-      <br />
-      <input v-model="user_password" type="password" placeholder="password" />
-      <p></p>
-      <button type="submit">Register</button>
-    </form>
+  <div class="login-page">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-8 mx-auto">
+          <div class="card register">
+            <h1>Sign Up</h1>
+            <form class="form-group" @submit.prevent="register">
+              <input
+                class="form-control"
+                v-model="user_name"
+                type="text"
+                placeholder="name"
+                required
+              />
+              <input
+                class="form-control"
+                v-model="user_email"
+                type="email"
+                placeholder="email"
+                required
+              />
+              <input
+                class="form-control"
+                v-model="user_password"
+                type="password"
+                placeholder="password"
+                required
+              />
+              <input class="btn btn-primary" type="submit" />
+              <p>
+                Already have an account
+                <router-link to="/login">Sign in here</router-link>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import router from "../router/router"
+
 export default {
   name: "Register",
   data: function () {
@@ -39,17 +65,57 @@ export default {
           password: this.user_password,
         }),
       })
-        .then((response) => response.json())
+        .then((response) => {
+          if (response.ok) {
+            response.json();
+            this.makeToast('success', 'Sign up succesfull, go to login page');
+          } else if (response.status == 435) {
+            this.makeToast(
+              "danger",
+              "This email already in use, please use a separate email"
+            );
+          }
+        })
         .then((data) => {
           console.log(data);
         })
         .catch((error) => {
           console.error("Error:", error);
         });
-        this.user_name = null;
-        this.user_email = null;
-        this.user_password = null;
+      this.user_name = null;
+      this.user_email = null;
+      this.user_password = null;
+    },
+    makeToast(variant = null, message) {
+      this.$bvToast.toast(message, {
+        variant: variant,
+        solid: true,
+      });
     },
   },
 };
 </script>
+
+<style scoped>
+p {
+  line-height: 1rem;
+}
+
+.card {
+  padding: 20px;
+}
+
+.form-group input {
+  margin-bottom: 20px;
+}
+
+.login-page {
+  align-items: center;
+  display: flex;
+  height: 100vh;
+}
+
+h1 {
+  margin-bottom: 1.5rem;
+}
+</style>

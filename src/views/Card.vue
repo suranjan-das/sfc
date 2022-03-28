@@ -4,8 +4,8 @@
     <div class="card-box text-center">
       <div class="card-top">
         <b-nav pills>
-          <b-nav-item>Active</b-nav-item>
-          <b-nav-item>Link</b-nav-item>
+          <!-- <b-nav-item>Active</b-nav-item>
+          <b-nav-item>Link</b-nav-item> -->
           <b-nav-item-dropdown
             id="my-nav-dropdown"
             text="Dropdown"
