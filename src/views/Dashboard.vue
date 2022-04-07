@@ -1,7 +1,10 @@
 <template>
   <div>
     <Navbar :showExport="true" @export="exportTo" />
-    <b-table hover :items="items" :fields="fields" class="text-center">
+    <div class="empty-message" v-if="!items.length">
+      <h1>Nothing to show start adding deck now!!!</h1>
+    </div>
+    <b-table v-else hover :items="items" :fields="fields" class="text-center">
       <template #cell(select_row)="data">
         <b-form-group>
           <b-checkbox
@@ -107,8 +110,12 @@ import router from "../router/router";
 import Navbar from "@/components/Navbar.vue";
 
 export default {
-  mounted() {
+  created() {
+    this.items = " ";
     this.getDecks();
+  },
+  mounted() {
+    console.log("after mounting data is ", this.items);
   },
   data() {
     return {
@@ -198,7 +205,7 @@ export default {
         .then((data) => {
           this.getDecks();
         });
-        this.makeToast('info', 'Deck deleted successfully')
+      this.makeToast("info", "Deck deleted successfully");
     },
     updateDeck: function () {
       fetch(store.state.base_url + `api/deck/${this.deck.id}`, {
@@ -299,4 +306,11 @@ export default {
 </script>
 
 <style scoped>
+.empty-message {
+  font-family:cursive;
+  position: fixed;
+  top: 50%;
+  left: 20%;
+  color:cadetblue;
+}
 </style>
